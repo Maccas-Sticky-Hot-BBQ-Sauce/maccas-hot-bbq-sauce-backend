@@ -47,6 +47,9 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.9.0'
     // https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java
     implementation group: 'com.google.protobuf', name: 'protobuf-java', version: '3.21.5'
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-csv
+    implementation group: 'org.apache.commons', name: 'commons-csv', version: '1.9.0'
+    implementation 'com.google.maps:google-maps-services:0.18.1'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
