@@ -34,10 +34,10 @@ public class Stop {
     private String description;
 
     @NotBlank
-    private String latitude;
+    private Double latitude;
 
     @NotBlank
-    private String longitude;
+    private Double longitude;
 
     private int zoneId;
 
