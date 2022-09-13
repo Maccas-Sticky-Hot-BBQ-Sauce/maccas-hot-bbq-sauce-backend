@@ -3978,7 +3978,7 @@ public final class GtfsRealtime {
 
     /**
      * <pre>
-     * Updates to StopTimes for the trip (both future, i.e., predictions, and in
+     * Updates to StopTime for the trip (both future, i.e., predictions, and in
      * some cases, past ones, i.e., those that already happened).
      * The updates must be sorted by stop_sequence, and apply for all the
      * following stops of the trip up to the next specified one.
@@ -4003,7 +4003,7 @@ public final class GtfsRealtime {
         getStopTimeUpdateList();
     /**
      * <pre>
-     * Updates to StopTimes for the trip (both future, i.e., predictions, and in
+     * Updates to StopTime for the trip (both future, i.e., predictions, and in
      * some cases, past ones, i.e., those that already happened).
      * The updates must be sorted by stop_sequence, and apply for all the
      * following stops of the trip up to the next specified one.
@@ -4027,7 +4027,7 @@ public final class GtfsRealtime {
     GtfsRealtime.TripUpdate.StopTimeUpdate getStopTimeUpdate(int index);
     /**
      * <pre>
-     * Updates to StopTimes for the trip (both future, i.e., predictions, and in
+     * Updates to StopTime for the trip (both future, i.e., predictions, and in
      * some cases, past ones, i.e., those that already happened).
      * The updates must be sorted by stop_sequence, and apply for all the
      * following stops of the trip up to the next specified one.
@@ -4051,7 +4051,7 @@ public final class GtfsRealtime {
     int getStopTimeUpdateCount();
     /**
      * <pre>
-     * Updates to StopTimes for the trip (both future, i.e., predictions, and in
+     * Updates to StopTime for the trip (both future, i.e., predictions, and in
      * some cases, past ones, i.e., those that already happened).
      * The updates must be sorted by stop_sequence, and apply for all the
      * following stops of the trip up to the next specified one.
@@ -4076,7 +4076,7 @@ public final class GtfsRealtime {
         getStopTimeUpdateOrBuilderList();
     /**
      * <pre>
-     * Updates to StopTimes for the trip (both future, i.e., predictions, and in
+     * Updates to StopTime for the trip (both future, i.e., predictions, and in
      * some cases, past ones, i.e., those that already happened).
      * The updates must be sorted by stop_sequence, and apply for all the
      * following stops of the trip up to the next specified one.
@@ -5471,7 +5471,7 @@ public final class GtfsRealtime {
          * <pre>
          * No data is given for this stop. The main intention for this value is to
          * give the predictions only for part of a trip, i.e., if the last update
-         * for a trip has a NO_DATA specifier, then StopTimes for the rest of the
+         * for a trip has a NO_DATA specifier, then StopTime for the rest of the
          * stops in the trip are considered to be unspecified as well.
          * Neither arrival nor departure should be supplied.
          * </pre>
@@ -5506,7 +5506,7 @@ public final class GtfsRealtime {
          * <pre>
          * No data is given for this stop. The main intention for this value is to
          * give the predictions only for part of a trip, i.e., if the last update
-         * for a trip has a NO_DATA specifier, then StopTimes for the rest of the
+         * for a trip has a NO_DATA specifier, then StopTime for the rest of the
          * stops in the trip are considered to be unspecified as well.
          * Neither arrival nor departure should be supplied.
          * </pre>
@@ -6777,7 +6777,7 @@ public final class GtfsRealtime {
     private java.util.List<GtfsRealtime.TripUpdate.StopTimeUpdate> stopTimeUpdate_;
     /**
      * <pre>
-     * Updates to StopTimes for the trip (both future, i.e., predictions, and in
+     * Updates to StopTime for the trip (both future, i.e., predictions, and in
      * some cases, past ones, i.e., those that already happened).
      * The updates must be sorted by stop_sequence, and apply for all the
      * following stops of the trip up to the next specified one.
@@ -6803,7 +6803,7 @@ public final class GtfsRealtime {
     }
     /**
      * <pre>
-     * Updates to StopTimes for the trip (both future, i.e., predictions, and in
+     * Updates to StopTime for the trip (both future, i.e., predictions, and in
      * some cases, past ones, i.e., those that already happened).
      * The updates must be sorted by stop_sequence, and apply for all the
      * following stops of the trip up to the next specified one.
@@ -6830,7 +6830,7 @@ public final class GtfsRealtime {
     }
     /**
      * <pre>
-     * Updates to StopTimes for the trip (both future, i.e., predictions, and in
+     * Updates to StopTime for the trip (both future, i.e., predictions, and in
      * some cases, past ones, i.e., those that already happened).
      * The updates must be sorted by stop_sequence, and apply for all the
      * following stops of the trip up to the next specified one.
@@ -6856,7 +6856,7 @@ public final class GtfsRealtime {
     }
     /**
      * <pre>
-     * Updates to StopTimes for the trip (both future, i.e., predictions, and in
+     * Updates to StopTime for the trip (both future, i.e., predictions, and in
      * some cases, past ones, i.e., those that already happened).
      * The updates must be sorted by stop_sequence, and apply for all the
      * following stops of the trip up to the next specified one.
@@ -6882,7 +6882,7 @@ public final class GtfsRealtime {
     }
     /**
      * <pre>
-     * Updates to StopTimes for the trip (both future, i.e., predictions, and in
+     * Updates to StopTime for the trip (both future, i.e., predictions, and in
      * some cases, past ones, i.e., those that already happened).
      * The updates must be sorted by stop_sequence, and apply for all the
      * following stops of the trip up to the next specified one.
@@ -7902,7 +7902,7 @@ public final class GtfsRealtime {
 
       /**
        * <pre>
-       * Updates to StopTimes for the trip (both future, i.e., predictions, and in
+       * Updates to StopTime for the trip (both future, i.e., predictions, and in
        * some cases, past ones, i.e., those that already happened).
        * The updates must be sorted by stop_sequence, and apply for all the
        * following stops of the trip up to the next specified one.
@@ -7932,7 +7932,7 @@ public final class GtfsRealtime {
       }
       /**
        * <pre>
-       * Updates to StopTimes for the trip (both future, i.e., predictions, and in
+       * Updates to StopTime for the trip (both future, i.e., predictions, and in
        * some cases, past ones, i.e., those that already happened).
        * The updates must be sorted by stop_sequence, and apply for all the
        * following stops of the trip up to the next specified one.
@@ -7962,7 +7962,7 @@ public final class GtfsRealtime {
       }
       /**
        * <pre>
-       * Updates to StopTimes for the trip (both future, i.e., predictions, and in
+       * Updates to StopTime for the trip (both future, i.e., predictions, and in
        * some cases, past ones, i.e., those that already happened).
        * The updates must be sorted by stop_sequence, and apply for all the
        * following stops of the trip up to the next specified one.
@@ -7992,7 +7992,7 @@ public final class GtfsRealtime {
       }
       /**
        * <pre>
-       * Updates to StopTimes for the trip (both future, i.e., predictions, and in
+       * Updates to StopTime for the trip (both future, i.e., predictions, and in
        * some cases, past ones, i.e., those that already happened).
        * The updates must be sorted by stop_sequence, and apply for all the
        * following stops of the trip up to the next specified one.
@@ -8029,7 +8029,7 @@ public final class GtfsRealtime {
       }
       /**
        * <pre>
-       * Updates to StopTimes for the trip (both future, i.e., predictions, and in
+       * Updates to StopTime for the trip (both future, i.e., predictions, and in
        * some cases, past ones, i.e., those that already happened).
        * The updates must be sorted by stop_sequence, and apply for all the
        * following stops of the trip up to the next specified one.
@@ -8063,7 +8063,7 @@ public final class GtfsRealtime {
       }
       /**
        * <pre>
-       * Updates to StopTimes for the trip (both future, i.e., predictions, and in
+       * Updates to StopTime for the trip (both future, i.e., predictions, and in
        * some cases, past ones, i.e., those that already happened).
        * The updates must be sorted by stop_sequence, and apply for all the
        * following stops of the trip up to the next specified one.
@@ -8099,7 +8099,7 @@ public final class GtfsRealtime {
       }
       /**
        * <pre>
-       * Updates to StopTimes for the trip (both future, i.e., predictions, and in
+       * Updates to StopTime for the trip (both future, i.e., predictions, and in
        * some cases, past ones, i.e., those that already happened).
        * The updates must be sorted by stop_sequence, and apply for all the
        * following stops of the trip up to the next specified one.
@@ -8136,7 +8136,7 @@ public final class GtfsRealtime {
       }
       /**
        * <pre>
-       * Updates to StopTimes for the trip (both future, i.e., predictions, and in
+       * Updates to StopTime for the trip (both future, i.e., predictions, and in
        * some cases, past ones, i.e., those that already happened).
        * The updates must be sorted by stop_sequence, and apply for all the
        * following stops of the trip up to the next specified one.
@@ -8170,7 +8170,7 @@ public final class GtfsRealtime {
       }
       /**
        * <pre>
-       * Updates to StopTimes for the trip (both future, i.e., predictions, and in
+       * Updates to StopTime for the trip (both future, i.e., predictions, and in
        * some cases, past ones, i.e., those that already happened).
        * The updates must be sorted by stop_sequence, and apply for all the
        * following stops of the trip up to the next specified one.
@@ -8204,7 +8204,7 @@ public final class GtfsRealtime {
       }
       /**
        * <pre>
-       * Updates to StopTimes for the trip (both future, i.e., predictions, and in
+       * Updates to StopTime for the trip (both future, i.e., predictions, and in
        * some cases, past ones, i.e., those that already happened).
        * The updates must be sorted by stop_sequence, and apply for all the
        * following stops of the trip up to the next specified one.
@@ -8239,7 +8239,7 @@ public final class GtfsRealtime {
       }
       /**
        * <pre>
-       * Updates to StopTimes for the trip (both future, i.e., predictions, and in
+       * Updates to StopTime for the trip (both future, i.e., predictions, and in
        * some cases, past ones, i.e., those that already happened).
        * The updates must be sorted by stop_sequence, and apply for all the
        * following stops of the trip up to the next specified one.
@@ -8272,7 +8272,7 @@ public final class GtfsRealtime {
       }
       /**
        * <pre>
-       * Updates to StopTimes for the trip (both future, i.e., predictions, and in
+       * Updates to StopTime for the trip (both future, i.e., predictions, and in
        * some cases, past ones, i.e., those that already happened).
        * The updates must be sorted by stop_sequence, and apply for all the
        * following stops of the trip up to the next specified one.
@@ -8305,7 +8305,7 @@ public final class GtfsRealtime {
       }
       /**
        * <pre>
-       * Updates to StopTimes for the trip (both future, i.e., predictions, and in
+       * Updates to StopTime for the trip (both future, i.e., predictions, and in
        * some cases, past ones, i.e., those that already happened).
        * The updates must be sorted by stop_sequence, and apply for all the
        * following stops of the trip up to the next specified one.
@@ -8332,7 +8332,7 @@ public final class GtfsRealtime {
       }
       /**
        * <pre>
-       * Updates to StopTimes for the trip (both future, i.e., predictions, and in
+       * Updates to StopTime for the trip (both future, i.e., predictions, and in
        * some cases, past ones, i.e., those that already happened).
        * The updates must be sorted by stop_sequence, and apply for all the
        * following stops of the trip up to the next specified one.
@@ -8362,7 +8362,7 @@ public final class GtfsRealtime {
       }
       /**
        * <pre>
-       * Updates to StopTimes for the trip (both future, i.e., predictions, and in
+       * Updates to StopTime for the trip (both future, i.e., predictions, and in
        * some cases, past ones, i.e., those that already happened).
        * The updates must be sorted by stop_sequence, and apply for all the
        * following stops of the trip up to the next specified one.
@@ -8393,7 +8393,7 @@ public final class GtfsRealtime {
       }
       /**
        * <pre>
-       * Updates to StopTimes for the trip (both future, i.e., predictions, and in
+       * Updates to StopTime for the trip (both future, i.e., predictions, and in
        * some cases, past ones, i.e., those that already happened).
        * The updates must be sorted by stop_sequence, and apply for all the
        * following stops of the trip up to the next specified one.
@@ -8420,7 +8420,7 @@ public final class GtfsRealtime {
       }
       /**
        * <pre>
-       * Updates to StopTimes for the trip (both future, i.e., predictions, and in
+       * Updates to StopTime for the trip (both future, i.e., predictions, and in
        * some cases, past ones, i.e., those that already happened).
        * The updates must be sorted by stop_sequence, and apply for all the
        * following stops of the trip up to the next specified one.
@@ -8448,7 +8448,7 @@ public final class GtfsRealtime {
       }
       /**
        * <pre>
-       * Updates to StopTimes for the trip (both future, i.e., predictions, and in
+       * Updates to StopTime for the trip (both future, i.e., predictions, and in
        * some cases, past ones, i.e., those that already happened).
        * The updates must be sorted by stop_sequence, and apply for all the
        * following stops of the trip up to the next specified one.

@@ -1,11 +1,10 @@
 package com.translink.api.repository.model;
 
-import com.translink.api.repository.model.embed.StopTimes;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.*;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
@@ -14,18 +13,15 @@ import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @Data
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 @Document
 public class Stop {
     @Id
-    private String id;
-
-    @Indexed
     @NotBlank
     private String stopId;
 
-    @Indexed
-    @NotBlank
     private String stopCode;
 
     @NotBlank
@@ -34,27 +30,31 @@ public class Stop {
     private String description;
 
     @NotBlank
-    private Double latitude;
+    private double latitude;
 
     @NotBlank
-    private Double longitude;
+    private double longitude;
 
-    private int zoneId;
+    private String zoneId;
 
-    @NotBlank
     @URL
     private String stopUrl;
 
     @PositiveOrZero
     private int locationType;
 
-    @DocumentReference(lazy = true)
-    private List<StopTimes> stopTimes;
-
     @DocumentReference
+    @JsonBackReference
+    @ToString.Exclude
+    private List<StopTime> stopTimes;
+
+    @DocumentReference(lazy = true)
+    @JsonManagedReference
     private Stop parentStop;
 
-    @DocumentReference(lazy = true)
+    @DocumentReference
+    @JsonBackReference
+    @ToString.Exclude
     private List<Stop> childStops;
 
     private String platformCode;
