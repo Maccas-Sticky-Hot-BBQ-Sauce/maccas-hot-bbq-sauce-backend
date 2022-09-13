@@ -1,26 +1,26 @@
 package com.translink.api.repository.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.translink.api.repository.model.embed.RouteType;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 @Document
 public class Route {
     @Id
-    private String id;
-
-    @Indexed(unique = true)
     @NotBlank
     private String routeId;
 
@@ -30,6 +30,7 @@ public class Route {
     @NotBlank
     private String longName;
 
+    @ToString.Exclude
     private String description;
 
     @NotNull
@@ -45,6 +46,8 @@ public class Route {
     @NotNull
     private String textColor;
 
-    @DBRef
+    @DocumentReference(lazy = true)
+    @JsonBackReference
+    @ToString.Exclude
     private List<Trip> trips;
 }

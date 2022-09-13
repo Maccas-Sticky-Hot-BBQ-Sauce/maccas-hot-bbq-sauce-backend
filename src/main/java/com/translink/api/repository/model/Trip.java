@@ -1,28 +1,38 @@
 package com.translink.api.repository.model;
 
-import com.translink.api.repository.model.embed.Direction;
-import com.translink.api.repository.model.embed.Shape;
-import com.translink.api.repository.model.embed.StopTimes;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.translink.api.repository.model.embed.*;
+import lombok.*;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 @Document
 public class Trip {
     @Id
-    private String id;
-
-    @Indexed(unique = true)
     @NotBlank
     private String tripId;
+
+    @NotBlank
+    private String serviceId;
+
+    @NotBlank
+    private String shapeId;
+
+    @DocumentReference
+    @JsonManagedReference
+    @ToString.Exclude
+    private Route route;
 
     @NotBlank
     private String headsign;
@@ -32,12 +42,20 @@ public class Trip {
 
     private String blockId;
 
-    @NotNull
-    private List<StopTimes> stopTimes;
+    @DocumentReference(lazy = true)
+    @JsonBackReference
+    @ToString.Exclude
+    private List<StopTime> stopTimes;
 
-    @NotBlank
-    private String shapeId;
-
-    @NotNull
+    @NotEmpty
+    @ToString.Exclude
     private List<Shape> shapes;
+
+    @NotNull
+    @ToString.Exclude
+    private Calendar calendar;
+
+    @NotNull
+    @ToString.Exclude
+    private List<CalendarException> exceptions;
 }
