@@ -1,5 +1,6 @@
 package com.translink.api.repository.model;
 
+import com.translink.api.repository.model.embed.StopTimes;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.URL;

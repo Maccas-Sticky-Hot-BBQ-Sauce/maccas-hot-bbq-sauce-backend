@@ -1,5 +1,6 @@
-package com.translink.api.repository.model;
+package com.translink.api.repository.model.embed;
 
+import com.translink.api.repository.model.Stop;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;

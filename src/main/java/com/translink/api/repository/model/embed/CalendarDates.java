@@ -1,4 +1,4 @@
-package com.translink.api.repository.model;
+package com.translink.api.repository.model.embed;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
