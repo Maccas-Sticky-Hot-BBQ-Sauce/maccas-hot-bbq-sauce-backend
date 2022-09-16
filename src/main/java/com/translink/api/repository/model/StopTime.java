@@ -1,5 +1,8 @@
 package com.translink.api.repository.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.translink.api.config.format.model.SpecializedTime;
 import com.translink.api.repository.model.Stop;
@@ -8,6 +11,7 @@ import com.translink.api.repository.model.embed.StopDropOffType;
 import com.translink.api.repository.model.embed.StopPickupType;
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.ReadOnlyProperty;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
@@ -29,16 +33,14 @@ public class StopTime {
     @NotNull
     private SpecializedTime departure;
 
-    @NotNull
     @DocumentReference(lazy = true)
-    @JsonManagedReference
     @ToString.Exclude
+    @JsonIgnore
     private Stop stop;
 
-    @NotNull
     @DocumentReference(lazy = true)
-    @JsonManagedReference
     @ToString.Exclude
+    @JsonIgnore
     private Trip trip;
 
     @PositiveOrZero

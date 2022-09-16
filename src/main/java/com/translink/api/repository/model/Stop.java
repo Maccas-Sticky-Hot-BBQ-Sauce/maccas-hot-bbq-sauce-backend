@@ -1,10 +1,13 @@
 package com.translink.api.repository.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
@@ -19,6 +22,9 @@ import java.util.List;
 @Document
 public class Stop {
     @Id
+    private String id;
+
+    @Indexed
     @NotBlank
     private String stopId;
 
@@ -44,8 +50,8 @@ public class Stop {
     private int locationType;
 
     @DocumentReference
-    @JsonBackReference
     @ToString.Exclude
+    @JsonIgnore
     private List<StopTime> stopTimes;
 
     @DocumentReference(lazy = true)

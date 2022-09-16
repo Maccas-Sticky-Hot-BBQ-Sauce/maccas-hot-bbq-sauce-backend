@@ -1,8 +1,11 @@
 package com.translink.api.repository.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.translink.api.repository.model.embed.RouteType;
 import lombok.*;
+import org.bson.types.ObjectId;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -21,6 +24,9 @@ import java.util.List;
 @Document
 public class Route {
     @Id
+    private String id;
+
+    @Indexed
     @NotBlank
     private String routeId;
 
@@ -47,7 +53,7 @@ public class Route {
     private String textColor;
 
     @DocumentReference(lazy = true)
-    @JsonBackReference
     @ToString.Exclude
+    @JsonIgnore
     private List<Trip> trips;
 }

@@ -1,10 +1,12 @@
 package com.translink.api.repository.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.translink.api.repository.model.embed.*;
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
@@ -20,6 +22,9 @@ import java.util.List;
 @Document
 public class Trip {
     @Id
+    private String id;
+
+    @Indexed
     @NotBlank
     private String tripId;
 
@@ -30,8 +35,8 @@ public class Trip {
     private String shapeId;
 
     @DocumentReference
-    @JsonManagedReference
     @ToString.Exclude
+    @JsonIgnore
     private Route route;
 
     @NotBlank
@@ -42,9 +47,9 @@ public class Trip {
 
     private String blockId;
 
-    @DocumentReference(lazy = true)
-    @JsonBackReference
+    @DocumentReference
     @ToString.Exclude
+    @JsonIgnore
     private List<StopTime> stopTimes;
 
     @NotEmpty
