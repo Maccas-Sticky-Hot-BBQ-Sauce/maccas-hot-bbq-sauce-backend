@@ -3,6 +3,10 @@ package com.translink.api.repository.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.translink.api.config.format.DepthSerializable;
 import com.translink.api.repository.model.embed.*;
 import lombok.*;
 import org.springframework.data.annotation.Id;
@@ -20,7 +24,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Document
-public class Trip {
+public class Trip implements DepthSerializable {
     @Id
     private String id;
 
@@ -63,4 +67,23 @@ public class Trip {
     @NotNull
     @ToString.Exclude
     private List<CalendarException> exceptions;
+
+    @Override
+    public ObjectNode toJson(int depth, ObjectMapper mapper) {
+        ObjectNode node = mapper.convertValue(this, ObjectNode.class);
+
+        if (depth > 1) {
+            ObjectNode routeNode = route.toJson(depth-1, mapper);
+            node.set("route", routeNode);
+
+            ArrayNode stopTimesNode = mapper.createArrayNode();
+            stopTimes.stream()
+                    .map(stopTime -> stopTime.toJson(depth-1, mapper))
+                    .forEach(stopTimesNode::add);
+
+            node.set("stopTimes", stopTimesNode);
+        }
+
+        return node;
+    }
 }

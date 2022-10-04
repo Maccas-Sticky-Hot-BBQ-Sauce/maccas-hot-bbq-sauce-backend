@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.translink.api.config.format.DepthSerializable;
 import lombok.*;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.data.annotation.Id;
@@ -20,7 +24,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Document
-public class Stop {
+public class Stop implements DepthSerializable {
     @Id
     private String id;
 
@@ -64,4 +68,20 @@ public class Stop {
     private List<Stop> childStops;
 
     private String platformCode;
+
+    @Override
+    public ObjectNode toJson(int depth, ObjectMapper mapper) {
+        ObjectNode node = mapper.convertValue(this, ObjectNode.class);
+
+        if (depth > 1) {
+            ArrayNode stopTimesNode = mapper.createArrayNode();
+            stopTimes.stream()
+                    .map(stopTime -> stopTime.toJson(depth-1, mapper))
+                    .forEach(stopTimesNode::add);
+
+            node.set("stopTimes", stopTimesNode);
+        }
+
+        return node;
+    }
 }

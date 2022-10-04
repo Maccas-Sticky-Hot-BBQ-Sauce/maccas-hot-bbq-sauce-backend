@@ -1,10 +1,18 @@
 package com.translink.api.config;
 
+import com.fasterxml.jackson.databind.BeanDescription;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializationConfig;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.ser.BeanSerializerModifier;
+import com.fasterxml.jackson.databind.ser.std.BeanSerializerBase;
+import com.translink.api.config.format.DepthSerializable;
+import com.translink.api.config.format.JacksonDepthSerializer;
 import com.translink.api.config.format.SpecializedTimeSerializer;
 import com.translink.api.config.format.converter.SpecializedTimeReadConverter;
 import com.translink.api.config.format.converter.SpecializedTimeWriteConverter;
 import com.translink.api.config.format.model.SpecializedTime;
+import com.translink.api.repository.model.Route;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -28,6 +36,15 @@ public class AppConfig {
     public SimpleModule specializedTimeModule() {
         SimpleModule simpleModule = new SimpleModule();
         simpleModule.addSerializer(SpecializedTime.class, new SpecializedTimeSerializer());
+//        simpleModule.setSerializerModifier(new BeanSerializerModifier() {
+//            @Override
+//            public JsonSerializer<?> modifySerializer(SerializationConfig config, BeanDescription beanDesc, JsonSerializer<?> serializer) {
+//                if(beanDesc.getBeanClass().isInstance(DepthSerializable.class)) {
+//                    return new JacksonDepthSerializer((BeanSerializerBase) serializer);
+//                }
+//                return super.modifySerializer(config, beanDesc, serializer);
+//            }
+//        });
 
         return simpleModule;
     }
