@@ -1,13 +1,14 @@
 package com.translink.api.repository.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.translink.api.config.format.DepthSerializable;
-import com.translink.api.repository.model.embed.*;
+import com.translink.api.repository.model.embed.Calendar;
+import com.translink.api.repository.model.embed.CalendarException;
+import com.translink.api.repository.model.embed.Direction;
+import com.translink.api.repository.model.embed.Shape;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;

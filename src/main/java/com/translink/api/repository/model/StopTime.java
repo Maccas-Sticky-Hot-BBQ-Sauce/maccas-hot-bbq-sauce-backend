@@ -1,20 +1,14 @@
 package com.translink.api.repository.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.translink.api.config.format.DepthSerializable;
 import com.translink.api.config.format.model.SpecializedTime;
-import com.translink.api.repository.model.Stop;
-import com.translink.api.repository.model.Trip;
 import com.translink.api.repository.model.embed.StopDropOffType;
 import com.translink.api.repository.model.embed.StopPickupType;
 import lombok.*;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.ReadOnlyProperty;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 

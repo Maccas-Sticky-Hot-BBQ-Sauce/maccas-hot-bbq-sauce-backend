@@ -1,18 +1,10 @@
 package com.translink.api.config;
 
-import com.fasterxml.jackson.databind.BeanDescription;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializationConfig;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.databind.ser.BeanSerializerModifier;
-import com.fasterxml.jackson.databind.ser.std.BeanSerializerBase;
-import com.translink.api.config.format.DepthSerializable;
-import com.translink.api.config.format.JacksonDepthSerializer;
 import com.translink.api.config.format.SpecializedTimeSerializer;
 import com.translink.api.config.format.converter.SpecializedTimeReadConverter;
 import com.translink.api.config.format.converter.SpecializedTimeWriteConverter;
 import com.translink.api.config.format.model.SpecializedTime;
-import com.translink.api.repository.model.Route;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;

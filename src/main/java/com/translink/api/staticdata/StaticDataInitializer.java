@@ -6,8 +6,8 @@ import com.translink.api.repository.model.Route;
 import com.translink.api.repository.model.Stop;
 import com.translink.api.repository.model.StopTime;
 import com.translink.api.repository.model.Trip;
-import com.translink.api.repository.model.embed.*;
 import com.translink.api.repository.model.embed.Calendar;
+import com.translink.api.repository.model.embed.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.io.Resource;
-import org.springframework.data.mongodb.core.BulkOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
