@@ -58,16 +58,18 @@ public class Route implements DepthSerializable {
     private List<Trip> trips;
 
     @Override
-    public ObjectNode toJson(int depth, ObjectMapper mapper) {
+    public ObjectNode toJson(int depth, ObjectMapper mapper, Class<?> originalClass) {
         ObjectNode node = mapper.convertValue(this, ObjectNode.class);
 
-        if (depth > 1) {
-            ArrayNode tripsNode = mapper.createArrayNode();
-            trips.stream()
-                    .map(trip -> trip.toJson(depth-1, mapper))
-                    .forEach(tripsNode::add);
+        if(depth > 1) {
+            if(originalClass.equals(Route.class)) {
+                ArrayNode tripsNode = mapper.createArrayNode();
+                trips.stream()
+                        .map(trip -> trip.toJson(depth-1, mapper, originalClass))
+                        .forEach(tripsNode::add);
 
-            node.set("trips", tripsNode);
+                node.set("trips", tripsNode);
+            }
         }
 
         return node;
