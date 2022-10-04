@@ -73,10 +73,10 @@ public class Trip implements DepthSerializable {
     public ObjectNode toJson(int depth, ObjectMapper mapper, Class<?> originalClass) {
         ObjectNode node = mapper.convertValue(this, ObjectNode.class);
 
-        if(depth > 1) {
-            ObjectNode routeNode = route.toJson(depth-1, mapper, originalClass);
-            node.set("route", routeNode);
+//        ObjectNode routeNode = route.toJson(depth-1, mapper, originalClass);
+//        node.set("route", routeNode);
 
+        if(depth > 1) {
             ArrayNode stopTimesNode = mapper.createArrayNode();
             stopTimes.stream()
                     .map(stopTime -> stopTime.toJson(depth-1, mapper, originalClass))
