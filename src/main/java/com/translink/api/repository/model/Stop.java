@@ -52,33 +52,47 @@ public class Stop implements DepthSerializable {
     @PositiveOrZero
     private int locationType;
 
-    @DocumentReference
+    @DocumentReference(lazy = true)
     @ToString.Exclude
     @JsonIgnore
     private List<StopTime> stopTimes;
 
     @DocumentReference(lazy = true)
-    @JsonManagedReference
+    @JsonIgnore
     private Stop parentStop;
 
     @DocumentReference
-    @JsonBackReference
+    @JsonIgnore
     @ToString.Exclude
     private List<Stop> childStops;
 
     private String platformCode;
 
     @Override
-    public ObjectNode toJson(int depth, ObjectMapper mapper) {
+    public ObjectNode toJson(int depth, ObjectMapper mapper, Class<?> originalClass) {
         ObjectNode node = mapper.convertValue(this, ObjectNode.class);
 
-        if (depth > 1) {
+        if(depth > 1) {
             ArrayNode stopTimesNode = mapper.createArrayNode();
             stopTimes.stream()
-                    .map(stopTime -> stopTime.toJson(depth-1, mapper))
+                    .map(stopTime -> stopTime.toJson(depth-1, mapper, originalClass))
                     .forEach(stopTimesNode::add);
 
             node.set("stopTimes", stopTimesNode);
+
+            if(originalClass.equals(Stop.class)) {
+                if(parentStop != null && parentStop.getId() != null) {
+                    ObjectNode parentNode = parentStop.toJson(depth-1, mapper, originalClass);
+                    node.set("parentStop", parentNode);
+                }
+
+                if(childStops != null && !childStops.isEmpty()) {
+                    ArrayNode childNode = mapper.createArrayNode();
+                    childStops.stream()
+                            .map(stop -> stop.toJson(depth-1, mapper, originalClass))
+                            .forEach(childNode::add);
+                }
+            }
         }
 
         return node;

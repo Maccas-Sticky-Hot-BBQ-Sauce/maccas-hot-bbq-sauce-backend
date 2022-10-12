@@ -52,7 +52,7 @@ public class Trip implements DepthSerializable {
 
     private String blockId;
 
-    @DocumentReference
+    @DocumentReference(lazy = true)
     @ToString.Exclude
     @JsonIgnore
     private List<StopTime> stopTimes;
@@ -70,16 +70,16 @@ public class Trip implements DepthSerializable {
     private List<CalendarException> exceptions;
 
     @Override
-    public ObjectNode toJson(int depth, ObjectMapper mapper) {
+    public ObjectNode toJson(int depth, ObjectMapper mapper, Class<?> originalClass) {
         ObjectNode node = mapper.convertValue(this, ObjectNode.class);
 
-        if (depth > 1) {
-            ObjectNode routeNode = route.toJson(depth-1, mapper);
-            node.set("route", routeNode);
+        ObjectNode routeNode = route.toJson(depth-1, mapper, originalClass);
+        node.set("route", routeNode);
 
+        if(depth > 1) {
             ArrayNode stopTimesNode = mapper.createArrayNode();
             stopTimes.stream()
-                    .map(stopTime -> stopTime.toJson(depth-1, mapper))
+                    .map(stopTime -> stopTime.toJson(depth-1, mapper, originalClass))
                     .forEach(stopTimesNode::add);
 
             node.set("stopTimes", stopTimesNode);

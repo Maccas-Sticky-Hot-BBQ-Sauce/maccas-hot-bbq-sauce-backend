@@ -42,7 +42,7 @@ public class GenericResponseHandler implements ResponseBodyAdvice {
         }
 
         if(body instanceof DepthSerializable) {
-            return ((DepthSerializable) body).toJson(maxDepth, mapper);
+            return ((DepthSerializable) body).toJson(maxDepth, mapper, body.getClass());
         }
 
         return body;

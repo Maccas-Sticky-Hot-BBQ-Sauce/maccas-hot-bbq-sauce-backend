@@ -30,12 +30,12 @@ public class StopTime implements DepthSerializable {
     @NotNull
     private SpecializedTime departure;
 
-    @DocumentReference(lazy = true)
+    @DocumentReference
     @ToString.Exclude
     @JsonIgnore
     private Stop stop;
 
-    @DocumentReference(lazy = true)
+    @DocumentReference
     @ToString.Exclude
     @JsonIgnore
     private Trip trip;
@@ -50,15 +50,19 @@ public class StopTime implements DepthSerializable {
     private StopDropOffType dropOffType;
 
     @Override
-    public ObjectNode toJson(int depth, ObjectMapper mapper) {
+    public ObjectNode toJson(int depth, ObjectMapper mapper, Class<?> originalClass) {
         ObjectNode node = mapper.convertValue(this, ObjectNode.class);
 
-        if (depth > 1) {
-            ObjectNode tripNode = trip.toJson(depth-1, mapper);
-            node.set("trip", tripNode);
+        if(depth > 1) {
+            if(!originalClass.equals(Trip.class)) {
+                ObjectNode tripNode = trip.toJson(depth-1, mapper, originalClass);
+                node.set("trip", tripNode);
+            }
 
-            ObjectNode stopNode = stop.toJson(depth-1, mapper);
-            node.set("stop", stopNode);
+            if(!originalClass.equals(Stop.class)) {
+                ObjectNode stopNode = stop.toJson(depth-1, mapper, originalClass);
+                node.set("stop", stopNode);
+            }
         }
 
         return node;

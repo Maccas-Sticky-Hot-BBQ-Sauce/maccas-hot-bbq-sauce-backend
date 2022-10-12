@@ -28,15 +28,6 @@ public class AppConfig {
     public SimpleModule specializedTimeModule() {
         SimpleModule simpleModule = new SimpleModule();
         simpleModule.addSerializer(SpecializedTime.class, new SpecializedTimeSerializer());
-//        simpleModule.setSerializerModifier(new BeanSerializerModifier() {
-//            @Override
-//            public JsonSerializer<?> modifySerializer(SerializationConfig config, BeanDescription beanDesc, JsonSerializer<?> serializer) {
-//                if(beanDesc.getBeanClass().isInstance(DepthSerializable.class)) {
-//                    return new JacksonDepthSerializer((BeanSerializerBase) serializer);
-//                }
-//                return super.modifySerializer(config, beanDesc, serializer);
-//            }
-//        });
 
         return simpleModule;
     }
