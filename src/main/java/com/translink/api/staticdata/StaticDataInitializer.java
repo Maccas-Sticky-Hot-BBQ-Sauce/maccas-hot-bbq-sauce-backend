@@ -1,16 +1,13 @@
 package com.translink.api.staticdata;
 
 import com.translink.api.config.format.model.SpecializedTime;
-import com.translink.api.repository.RouteRepository;
-import com.translink.api.repository.StopRepository;
-import com.translink.api.repository.StopTimeRepository;
-import com.translink.api.repository.TripRepository;
+import com.translink.api.repository.BulkBatchProcessor;
 import com.translink.api.repository.model.Route;
 import com.translink.api.repository.model.Stop;
 import com.translink.api.repository.model.StopTime;
 import com.translink.api.repository.model.Trip;
-import com.translink.api.repository.model.embed.*;
 import com.translink.api.repository.model.embed.Calendar;
+import com.translink.api.repository.model.embed.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
@@ -20,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.io.Resource;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import java.io.FileReader;
@@ -34,6 +32,7 @@ import java.util.*;
 @Slf4j
 public class StaticDataInitializer {
     public static final String COMPLETED_READING_COUNT = "Completed reading {}, count = {}";
+
     @Value(value = "${refresh-data}")
     private boolean refreshData;
 
@@ -67,35 +66,23 @@ public class StaticDataInitializer {
     @Value(value = "classpath:static_gtfs/trips.csv")
     private Resource tripData;
 
-    private RouteRepository routeRepository;
-    private TripRepository tripRepository;
-    private StopRepository stopRepository;
-    private StopTimeRepository stopTimeRepository;
+    private BulkBatchProcessor batchProcessor;
+    private MongoTemplate mongoTemplate;
 
     @Autowired
-    public void setStopTimeRepository(StopTimeRepository stopTimeRepository) {
-        this.stopTimeRepository = stopTimeRepository;
+    public void setMongoTemplate(MongoTemplate mongoTemplate) {
+        this.mongoTemplate = mongoTemplate;
     }
 
     @Autowired
-    public void setRouteRepository(RouteRepository routeRepository) {
-        this.routeRepository = routeRepository;
-    }
-
-    @Autowired
-    public void setTripRepository(TripRepository tripRepository) {
-        this.tripRepository = tripRepository;
-    }
-
-    @Autowired
-    public void setStopRepository(StopRepository stopRepository) {
-        this.stopRepository = stopRepository;
+    public void setBatchProcessor(BulkBatchProcessor batchProcessor) {
+        this.batchProcessor = batchProcessor;
     }
 
     @EventListener(ContextRefreshedEvent.class)
     public void populateDatabaseOnStartup() throws IOException {
         if(!refreshData) {
-            log.info("Database {} not refreshed", mongoHost);
+            log.info("Skip refreshing database {}", mongoHost);
 
             return;
         }
@@ -172,6 +159,7 @@ public class StaticDataInitializer {
             try(Reader reader = new FileReader(routeData.getFile())) {
                 for(CSVRecord csvRecord : csvFormat.parse(reader)) {
                     Route route = Route.builder()
+                            .id(new ObjectId().toString())
                             .routeId(csvRecord.get(0))
                             .shortName(csvRecord.get(1))
                             .longName(csvRecord.get(2))
@@ -196,6 +184,7 @@ public class StaticDataInitializer {
             try(Reader reader = new FileReader(tripData.getFile())) {
                 for(CSVRecord csvRecord : csvFormat.parse(reader)) {
                     Trip trip = Trip.builder()
+                            .id(new ObjectId().toString())
                             .route(routeMap.get(csvRecord.get(0)))
                             .serviceId(csvRecord.get(1))
                             .calendar(calendarMap.get(csvRecord.get(1)))
@@ -220,6 +209,7 @@ public class StaticDataInitializer {
             try(Reader reader = new FileReader(stopData.getFile())) {
                 for(CSVRecord csvRecord : csvFormat.parse(reader)) {
                     Stop stop = Stop.builder()
+                            .id(new ObjectId().toString())
                             .stopId(csvRecord.get(0))
                             .stopCode(csvRecord.get(1))
                             .name(csvRecord.get(2))
@@ -235,7 +225,11 @@ public class StaticDataInitializer {
 
                     String parentStation = csvRecord.get(9);
                     if(parentStation != null && !parentStation.isEmpty()) {
-                        stop.setParentStop(stopMap.get(parentStation));
+                        stop.setParentStop(
+                                Stop.builder()
+                                        .stopId(parentStation)
+                                        .build()
+                        );
                         stop.setPlatformCode(csvRecord.get(10));
                     }
 
@@ -279,17 +273,10 @@ public class StaticDataInitializer {
             }
             log.info(COMPLETED_READING_COUNT, stopTimeData.getFilename(), stopTimes.size());
 
-            routeRepository.saveAll(routeMap.values());
-            log.info("Saved all Routes");
-
-            tripRepository.saveAll(tripMap.values());
-            log.info("Saved all Trips");
-
-            stopRepository.saveAll(stopMap.values());
-            log.info("Saved all Stops");
-
-            stopTimeRepository.saveAll(stopTimes);
-            log.info("Saved all StopTimes");
+            batchProcessor.bulkInsert(Route.class, new ArrayList<>(routeMap.values()));
+            batchProcessor.bulkInsert(Trip.class, new ArrayList<>(tripMap.values()));
+            batchProcessor.bulkInsert(Stop.class, new ArrayList<>(stopMap.values()));
+            batchProcessor.bulkInsert(StopTime.class, stopTimes);
         } catch (Throwable e) {
             cleanUpDatabase();
             log.error("Error on populating database, database is rolled back");
@@ -301,9 +288,10 @@ public class StaticDataInitializer {
     }
 
     private void cleanUpDatabase() {
-        routeRepository.deleteAll();
-        tripRepository.deleteAll();
-        stopRepository.deleteAll();
+        mongoTemplate.dropCollection(Route.class);
+        mongoTemplate.dropCollection(Trip.class);
+        mongoTemplate.dropCollection(Stop.class);
+        mongoTemplate.dropCollection(StopTime.class);
 
         log.info("Cleaned up {}", mongoHost);
     }

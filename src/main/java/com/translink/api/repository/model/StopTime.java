@@ -1,9 +1,10 @@
 package com.translink.api.repository.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.translink.api.config.format.DepthSerializable;
 import com.translink.api.config.format.model.SpecializedTime;
-import com.translink.api.repository.model.Stop;
-import com.translink.api.repository.model.Trip;
 import com.translink.api.repository.model.embed.StopDropOffType;
 import com.translink.api.repository.model.embed.StopPickupType;
 import lombok.*;
@@ -19,7 +20,7 @@ import javax.validation.constraints.PositiveOrZero;
 @AllArgsConstructor
 @NoArgsConstructor
 @Document
-public class StopTime {
+public class StopTime implements DepthSerializable {
     @Id
     private String id;
 
@@ -29,16 +30,14 @@ public class StopTime {
     @NotNull
     private SpecializedTime departure;
 
-    @NotNull
-    @DocumentReference(lazy = true)
-    @JsonManagedReference
+    @DocumentReference
     @ToString.Exclude
+    @JsonIgnore
     private Stop stop;
 
-    @NotNull
-    @DocumentReference(lazy = true)
-    @JsonManagedReference
+    @DocumentReference
     @ToString.Exclude
+    @JsonIgnore
     private Trip trip;
 
     @PositiveOrZero
@@ -49,4 +48,23 @@ public class StopTime {
 
     @NotNull
     private StopDropOffType dropOffType;
+
+    @Override
+    public ObjectNode toJson(int depth, ObjectMapper mapper, Class<?> originalClass) {
+        ObjectNode node = mapper.convertValue(this, ObjectNode.class);
+
+        if(depth > 1) {
+            if(!originalClass.equals(Trip.class)) {
+                ObjectNode tripNode = trip.toJson(depth-1, mapper, originalClass);
+                node.set("trip", tripNode);
+            }
+
+            if(!originalClass.equals(Stop.class)) {
+                ObjectNode stopNode = stop.toJson(depth-1, mapper, originalClass);
+                node.set("stop", stopNode);
+            }
+        }
+
+        return node;
+    }
 }

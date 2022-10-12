@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TripRepository extends MongoRepository<Trip, String> {
+    Trip findByTripId(String id);
 }

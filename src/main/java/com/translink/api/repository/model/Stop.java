@@ -1,10 +1,16 @@
 package com.translink.api.repository.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.translink.api.config.format.DepthSerializable;
 import lombok.*;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
@@ -17,8 +23,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Document
-public class Stop {
+public class Stop implements DepthSerializable {
     @Id
+    private String id;
+
+    @Indexed
     @NotBlank
     private String stopId;
 
@@ -43,19 +52,49 @@ public class Stop {
     @PositiveOrZero
     private int locationType;
 
-    @DocumentReference
-    @JsonBackReference
+    @DocumentReference(lazy = true)
     @ToString.Exclude
+    @JsonIgnore
     private List<StopTime> stopTimes;
 
     @DocumentReference(lazy = true)
-    @JsonManagedReference
+    @JsonIgnore
     private Stop parentStop;
 
     @DocumentReference
-    @JsonBackReference
+    @JsonIgnore
     @ToString.Exclude
     private List<Stop> childStops;
 
     private String platformCode;
+
+    @Override
+    public ObjectNode toJson(int depth, ObjectMapper mapper, Class<?> originalClass) {
+        ObjectNode node = mapper.convertValue(this, ObjectNode.class);
+
+        if(depth > 1) {
+            ArrayNode stopTimesNode = mapper.createArrayNode();
+            stopTimes.stream()
+                    .map(stopTime -> stopTime.toJson(depth-1, mapper, originalClass))
+                    .forEach(stopTimesNode::add);
+
+            node.set("stopTimes", stopTimesNode);
+
+            if(originalClass.equals(Stop.class)) {
+                if(parentStop != null && parentStop.getId() != null) {
+                    ObjectNode parentNode = parentStop.toJson(depth-1, mapper, originalClass);
+                    node.set("parentStop", parentNode);
+                }
+
+                if(childStops != null && !childStops.isEmpty()) {
+                    ArrayNode childNode = mapper.createArrayNode();
+                    childStops.stream()
+                            .map(stop -> stop.toJson(depth-1, mapper, originalClass))
+                            .forEach(childNode::add);
+                }
+            }
+        }
+
+        return node;
+    }
 }
