@@ -12,8 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/sample")
-public class SampleController {
+public class DataController {
     private TripRepository tripRepository;
     private StopRepository stopRepository;
     private RouteRepository routeRepository;
@@ -35,19 +34,16 @@ public class SampleController {
 
     @GetMapping("/stop")
     public Stop getStopDetail(String id) {
-//        return StopDTO.mapFrom(stopRepository.findByStopId(id));
         return stopRepository.findByStopId(id);
     }
 
     @GetMapping("/trip")
     public Trip getTripDetail(String id) {
-//        return TripDTO.mapFrom(tripRepository.findByTripId(id));
         return tripRepository.findByTripId(id);
     }
 
     @GetMapping("/route")
     public Route getRouteDetail(String id) {
-//        return RouteDTO.mapFrom(routeRepository.findByRouteId(id));
         return routeRepository.findByRouteId(id);
     }
 }
