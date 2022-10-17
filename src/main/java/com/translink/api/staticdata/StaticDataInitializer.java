@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.io.Resource;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
@@ -80,6 +81,7 @@ public class StaticDataInitializer {
     }
 
     @EventListener(ContextRefreshedEvent.class)
+    @Order(1)
     public void populateDatabaseOnStartup() throws IOException {
         if(!refreshData) {
             log.info("Skip refreshing database {}", mongoHost);
