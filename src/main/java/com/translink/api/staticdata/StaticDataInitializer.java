@@ -34,7 +34,7 @@ import java.util.*;
 public class StaticDataInitializer {
     public static final String COMPLETED_READING_COUNT = "Completed reading {}, count = {}";
 
-    @Value(value = "${refresh-data}")
+    @Value(value = "${refresh-data.static}")
     private boolean refreshData;
 
     @Value(value = "${spring.data.mongodb.host}")

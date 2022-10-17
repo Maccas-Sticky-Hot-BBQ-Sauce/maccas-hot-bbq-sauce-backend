@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class PlacesInitializer {
-    @Value(value = "${refresh-data}")
+    @Value(value = "${refresh-data.places}")
     private boolean refreshData;
 
     @Value("classpath:places/stops.json")
