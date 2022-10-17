@@ -1,11 +1,7 @@
 package com.translink.api.staticdata;
 
 import com.google.gson.Gson;
-import com.google.maps.GeoApiContext;
-import com.google.maps.PlacesApi;
-import com.google.maps.errors.ApiException;
 import com.google.maps.model.LatLng;
-import com.google.maps.model.PlacesSearchResponse;
 import com.translink.api.repository.LandmarkRepository;
 import com.translink.api.repository.StopRepository;
 import com.translink.api.repository.model.Landmark;
@@ -23,9 +19,10 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
-import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
