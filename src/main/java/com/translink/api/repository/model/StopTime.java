@@ -54,12 +54,12 @@ public class StopTime implements DepthSerializable {
         ObjectNode node = mapper.convertValue(this, ObjectNode.class);
 
         if(depth > 1) {
-            if(!originalClass.equals(Trip.class)) {
+            if(!Trip.class.equals(originalClass)) {
                 ObjectNode tripNode = trip.toJson(depth-1, mapper, originalClass);
                 node.set("trip", tripNode);
             }
 
-            if(!originalClass.equals(Stop.class)) {
+            if(!Stop.class.equals(originalClass)) {
                 ObjectNode stopNode = stop.toJson(depth-1, mapper, originalClass);
                 node.set("stop", stopNode);
             }

@@ -80,7 +80,7 @@ public class Stop implements DepthSerializable {
 
             node.set("stopTimes", stopTimesNode);
 
-            if(originalClass.equals(Stop.class)) {
+            if(Stop.class.equals(originalClass)) {
                 if(parentStop != null && parentStop.getId() != null) {
                     ObjectNode parentNode = parentStop.toJson(depth-1, mapper, originalClass);
                     node.set("parentStop", parentNode);
@@ -89,8 +89,10 @@ public class Stop implements DepthSerializable {
                 if(childStops != null && !childStops.isEmpty()) {
                     ArrayNode childNode = mapper.createArrayNode();
                     childStops.stream()
-                            .map(stop -> stop.toJson(depth-1, mapper, originalClass))
+                            .map(stop -> stop.toJson(depth, mapper, originalClass))
                             .forEach(childNode::add);
+
+                    node.set("childStop", childNode);
                 }
             }
         }

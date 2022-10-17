@@ -62,7 +62,7 @@ public class Route implements DepthSerializable {
         ObjectNode node = mapper.convertValue(this, ObjectNode.class);
 
         if(depth > 1) {
-            if(originalClass.equals(Route.class)) {
+            if(Route.class.equals(originalClass)) {
                 ArrayNode tripsNode = mapper.createArrayNode();
                 trips.stream()
                         .map(trip -> trip.toJson(depth-1, mapper, originalClass))
