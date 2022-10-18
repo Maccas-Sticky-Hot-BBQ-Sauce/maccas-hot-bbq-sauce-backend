@@ -6,6 +6,7 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.Ordered;
@@ -16,6 +17,9 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class QuartzInitializer {
+    @Value("${execute-scheduler}")
+    private boolean isExecuted;
+
     private Trigger trigger;
     private JobDetail job;
     private SchedulerFactoryBean factory;
@@ -38,8 +42,12 @@ public class QuartzInitializer {
     @EventListener(ContextRefreshedEvent.class)
     @Order(3)
     public void startQuartzScheduler() throws SchedulerException {
-        Scheduler scheduler = factory.getScheduler();
-        scheduler.scheduleJob(job, trigger);
-        scheduler.start();
+        if(isExecuted) {
+            Scheduler scheduler = factory.getScheduler();
+            scheduler.scheduleJob(job, trigger);
+            scheduler.start();
+
+            log.info("Scheduler is started.");
+        }
     }
 }
