@@ -26,6 +26,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
@@ -69,7 +70,13 @@ public class TripUpdateJob implements Job {
                     .filter(tripUpdate -> stopTimeRepository.existsByTripId(tripUpdate.getTrip().getTripId()))
                     .flatMap(tripUpdate -> tripUpdate.getStopTimeUpdateList().parallelStream()
                             .map(stopTimeUpdate -> {
-                                StopTime stopTime = stopTimeRepository.findByTripIdAndStopId(tripUpdate.getTrip().getTripId(), stopTimeUpdate.getStopId());
+                                StopTime stopTime = stopTimeRepository.findByTripIdAndSequence(tripUpdate.getTrip().getTripId(), stopTimeUpdate.getStopSequence());
+                                if(stopTime == null) {
+//                                    Best effort matching for the realtime data
+//                                    if stopTime == null, it must mean realtime data is out of sync
+                                    return null;
+                                }
+
                                 TripUpdate update = convert(stopTimeUpdate);
                                 update.setTripRelationship(TripUpdate.TripRelationship.values()[tripUpdate.getTrip().getScheduleRelationship().getNumber()]);
                                 update.setStopTimeId(stopTime.getId());
@@ -78,6 +85,7 @@ public class TripUpdateJob implements Job {
 
                                 return stopTime;
                             })
+                            .filter(Objects::nonNull)
                     )
                     .collect(Collectors.toList());
 
@@ -108,7 +116,7 @@ public class TripUpdateJob implements Job {
             String time = Instant.ofEpochSecond(arrival.getTime())
                     .atZone(ZoneId.systemDefault())
                     .toLocalTime()
-                    .toString();
+                    .format(timeFormatter);
 
             TripUpdate.ExpectedTime expectedArrival = TripUpdate.ExpectedTime.builder()
                     .time(SpecializedTime.parse(time, timeFormatter))
@@ -124,7 +132,7 @@ public class TripUpdateJob implements Job {
             String time = Instant.ofEpochSecond(departure.getTime())
                     .atZone(ZoneId.systemDefault())
                     .toLocalTime()
-                    .toString();
+                    .format(timeFormatter);
 
             TripUpdate.ExpectedTime expectedDeparture = TripUpdate.ExpectedTime.builder()
                     .time(SpecializedTime.parse(time, timeFormatter))
