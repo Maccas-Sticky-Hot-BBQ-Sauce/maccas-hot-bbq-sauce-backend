@@ -2,10 +2,7 @@ package com.translink.api.staticdata;
 
 import com.translink.api.config.format.model.SpecializedTime;
 import com.translink.api.repository.BulkBatchProcessor;
-import com.translink.api.repository.model.Route;
-import com.translink.api.repository.model.Stop;
-import com.translink.api.repository.model.StopTime;
-import com.translink.api.repository.model.Trip;
+import com.translink.api.repository.model.*;
 import com.translink.api.repository.model.embed.Calendar;
 import com.translink.api.repository.model.embed.*;
 import lombok.extern.slf4j.Slf4j;
@@ -28,13 +25,14 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 public class StaticDataInitializer {
     public static final String COMPLETED_READING_COUNT = "Completed reading {}, count = {}";
 
-    @Value(value = "${refresh-data}")
+    @Value(value = "${refresh-data.static}")
     private boolean refreshData;
 
     @Value(value = "${spring.data.mongodb.host}")
@@ -144,6 +142,7 @@ public class StaticDataInitializer {
             try(Reader reader = new FileReader(shapeData.getFile())) {
                 for(CSVRecord csvRecord : csvFormat.parse(reader)) {
                     Shape shape = Shape.builder()
+                            .id(new ObjectId().toString())
                             .sequence(Integer.parseInt(csvRecord.get(3)))
                             .latitude(Double.parseDouble(csvRecord.get(1)))
                             .longitude(Double.parseDouble(csvRecord.get(2)))
@@ -161,8 +160,7 @@ public class StaticDataInitializer {
             try(Reader reader = new FileReader(routeData.getFile())) {
                 for(CSVRecord csvRecord : csvFormat.parse(reader)) {
                     Route route = Route.builder()
-                            .id(new ObjectId().toString())
-                            .routeId(csvRecord.get(0))
+                            .id(csvRecord.get(0))
                             .shortName(csvRecord.get(1))
                             .longName(csvRecord.get(2))
                             .description(csvRecord.get(3))
@@ -177,7 +175,7 @@ public class StaticDataInitializer {
                             .trips(new ArrayList<>())
                             .build();
 
-                    routeMap.put(route.getRouteId(), route);
+                    routeMap.put(route.getId(), route);
                 }
             }
             log.info(COMPLETED_READING_COUNT, routeData.getFilename(), routeMap.keySet().size());
@@ -186,12 +184,11 @@ public class StaticDataInitializer {
             try(Reader reader = new FileReader(tripData.getFile())) {
                 for(CSVRecord csvRecord : csvFormat.parse(reader)) {
                     Trip trip = Trip.builder()
-                            .id(new ObjectId().toString())
+                            .id(csvRecord.get(2))
                             .route(routeMap.get(csvRecord.get(0)))
                             .serviceId(csvRecord.get(1))
                             .calendar(calendarMap.get(csvRecord.get(1)))
                             .exceptions(exceptionsMap.get(csvRecord.get(1)))
-                            .tripId(csvRecord.get(2))
                             .headsign(csvRecord.get(3))
                             .direction(Direction.values()[Integer.parseInt(csvRecord.get(4))])
                             .blockId(csvRecord.get(5))
@@ -202,7 +199,7 @@ public class StaticDataInitializer {
 
                     routeMap.get(csvRecord.get(0)).getTrips().add(trip);
 
-                    tripMap.put(trip.getTripId(), trip);
+                    tripMap.put(trip.getId(), trip);
                 }
             }
             log.info(COMPLETED_READING_COUNT, tripData.getFilename(), tripMap.keySet().size());
@@ -211,8 +208,7 @@ public class StaticDataInitializer {
             try(Reader reader = new FileReader(stopData.getFile())) {
                 for(CSVRecord csvRecord : csvFormat.parse(reader)) {
                     Stop stop = Stop.builder()
-                            .id(new ObjectId().toString())
-                            .stopId(csvRecord.get(0))
+                            .id(csvRecord.get(0))
                             .stopCode(csvRecord.get(1))
                             .name(csvRecord.get(2))
                             .description(csvRecord.get(3))
@@ -229,19 +225,19 @@ public class StaticDataInitializer {
                     if(parentStation != null && !parentStation.isEmpty()) {
                         stop.setParentStop(
                                 Stop.builder()
-                                        .stopId(parentStation)
+                                        .id(parentStation)
                                         .build()
                         );
                         stop.setPlatformCode(csvRecord.get(10));
                     }
 
-                    stopMap.put(stop.getStopId(), stop);
+                    stopMap.put(stop.getId(), stop);
                 }
 
                 stopMap.values().stream()
                         .filter(stop -> stop.getParentStop() != null)
                         .forEach(childStop -> {
-                            Stop parentStop = stopMap.get(childStop.getParentStop().getStopId());
+                            Stop parentStop = stopMap.get(childStop.getParentStop().getId());
 
                             parentStop.getChildStops().add(childStop);
                             childStop.setParentStop(parentStop);
@@ -263,11 +259,12 @@ public class StaticDataInitializer {
                             .build();
 
                     Trip trip = tripMap.get(csvRecord.get(0));
-                    stopTime.setTrip(trip);
+                    stopTime.setTripId(trip.getId());
+                    stopTime.setDays(trip.getCalendar().getDays());
                     trip.getStopTimes().add(stopTime);
 
                     Stop stop = stopMap.get(csvRecord.get(3));
-                    stopTime.setStop(stop);
+                    stopTime.setStopId(stop.getId());
                     stop.getStopTimes().add(stopTime);
 
                     stopTimes.add(stopTime);
@@ -275,6 +272,11 @@ public class StaticDataInitializer {
             }
             log.info(COMPLETED_READING_COUNT, stopTimeData.getFilename(), stopTimes.size());
 
+            List<Shape> shapes = shapeMap.values().parallelStream()
+                    .flatMap(Collection::stream)
+                    .collect(Collectors.toList());
+
+            batchProcessor.bulkInsert(Shape.class, shapes);
             batchProcessor.bulkInsert(Route.class, new ArrayList<>(routeMap.values()));
             batchProcessor.bulkInsert(Trip.class, new ArrayList<>(tripMap.values()));
             batchProcessor.bulkInsert(Stop.class, new ArrayList<>(stopMap.values()));

@@ -40,6 +40,10 @@ public class Landmark {
 
     private String icon;
 
+    private String url;
+
+    private String description;
+
     public Landmark copy() {
         return Landmark.builder()
                 .id(this.id)
@@ -51,6 +55,8 @@ public class Landmark {
                 .distance(this.distance)
                 .rating(this.rating)
                 .icon(this.icon)
+                .url(this.url)
+                .description(this.description)
                 .build();
     }
 }

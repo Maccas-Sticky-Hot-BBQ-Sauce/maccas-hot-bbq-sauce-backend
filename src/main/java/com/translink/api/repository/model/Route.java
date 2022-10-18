@@ -26,10 +26,6 @@ public class Route implements DepthSerializable {
     @Id
     private String id;
 
-    @Indexed
-    @NotBlank
-    private String routeId;
-
     @NotBlank
     private String shortName;
 

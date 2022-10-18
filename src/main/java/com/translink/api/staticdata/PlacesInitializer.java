@@ -1,11 +1,7 @@
 package com.translink.api.staticdata;
 
 import com.google.gson.Gson;
-import com.google.maps.GeoApiContext;
-import com.google.maps.PlacesApi;
-import com.google.maps.errors.ApiException;
 import com.google.maps.model.LatLng;
-import com.google.maps.model.PlacesSearchResponse;
 import com.translink.api.repository.LandmarkRepository;
 import com.translink.api.repository.StopRepository;
 import com.translink.api.repository.model.Landmark;
@@ -23,15 +19,16 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
-import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 public class PlacesInitializer {
-    @Value(value = "${refresh-data}")
+    @Value(value = "${refresh-data.places}")
     private boolean refreshData;
 
     @Value("classpath:places/stops.json")
@@ -84,21 +81,24 @@ public class PlacesInitializer {
         List<String> stopIds = (List<String>) stopMap.get("stops");
         stopIds.parallelStream()
                 .forEach(stopId -> {
-                    Stop stop = stopRepository.findByStopId(stopId);
+                    Stop stop = stopRepository.findById(stopId).get();
 
                     try {
                         List<Landmark> list = placesService.findNearbyPlaces(new LatLng(stop.getLatitude(), stop.getLongitude()))
                                 .parallelStream()
-                                .flatMap(response -> Arrays.stream(response.results).parallel()
+                                .flatMap(response -> Arrays.stream(response.results)
+                                        .parallel()
                                         .map(result -> {
                                             try {
                                                 Landmark landmark = Landmark.builder()
-                                                        .stopId(stop.getStopId())
+                                                        .stopId(stop.getId())
                                                         .latitude(result.geometry.location.lat)
                                                         .longitude(result.geometry.location.lng)
                                                         .name(result.name)
                                                         .image(result.photos != null && result.photos.length > 0 ? placesService.getPhoto(result.photos[0].photoReference, result.photos[0].height, result.photos[0].width) : null)
                                                         .icon(String.valueOf(result.icon))
+                                                        .url(placesService.getUrl(result.placeId))
+                                                        .description(null)
                                                         .rating(result.rating)
                                                         .build();
 
@@ -119,7 +119,7 @@ public class PlacesInitializer {
                                 .collect(Collectors.toList());
 
                         landmarkRepository.saveAll(list);
-                        log.info("Populated stop {} with {} landmarks", stop.getStopId(), list.size());
+                        log.info("Populated stop {} with {} landmarks", stop.getId(), list.size());
 
                         if(stop.getChildStops() != null && !stop.getChildStops().isEmpty()) {
                             stop.getChildStops().parallelStream()
@@ -127,7 +127,7 @@ public class PlacesInitializer {
                                         List<Landmark> childLandmarks = list.parallelStream()
                                                 .map(Landmark::copy)
                                                 .map(landmark -> {
-                                                    landmark.setStopId(childStop.getStopId());
+                                                    landmark.setStopId(childStop.getId());
 
                                                     return landmark;
                                                 })
@@ -135,7 +135,7 @@ public class PlacesInitializer {
 
                                         landmarkRepository.saveAll(childLandmarks);
 
-                                        log.info("Populated stop {} with {} landmarks", childStop.getStopId(), childLandmarks.size());
+                                        log.info("Populated stop {} with {} landmarks", childStop.getId(), childLandmarks.size());
                                     });
                         }
                     } catch (Exception e) {

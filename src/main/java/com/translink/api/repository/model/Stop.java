@@ -1,8 +1,6 @@
 package com.translink.api.repository.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -27,10 +25,6 @@ public class Stop implements DepthSerializable {
     @Id
     private String id;
 
-    @Indexed
-    @NotBlank
-    private String stopId;
-
     private String stopCode;
 
     @NotBlank
@@ -53,15 +47,18 @@ public class Stop implements DepthSerializable {
     private int locationType;
 
     @DocumentReference(lazy = true)
+    @Indexed
     @ToString.Exclude
     @JsonIgnore
     private List<StopTime> stopTimes;
 
     @DocumentReference(lazy = true)
+    @Indexed
     @JsonIgnore
     private Stop parentStop;
 
     @DocumentReference
+    @Indexed
     @JsonIgnore
     @ToString.Exclude
     private List<Stop> childStops;

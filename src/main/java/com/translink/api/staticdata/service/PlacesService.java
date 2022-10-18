@@ -2,25 +2,21 @@ package com.translink.api.staticdata.service;
 
 import com.google.maps.GeoApiContext;
 import com.google.maps.ImageResult;
+import com.google.maps.PlaceDetailsRequest;
 import com.google.maps.PlacesApi;
 import com.google.maps.errors.ApiException;
 import com.google.maps.model.LatLng;
 import com.google.maps.model.PlaceType;
 import com.google.maps.model.PlacesSearchResponse;
 import com.google.maps.model.RankBy;
-import com.translink.api.config.advice.annotation.Delayed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
-import java.util.concurrent.ExecutionException;
 
 @Service
 public class PlacesService {
@@ -65,6 +61,13 @@ public class PlacesService {
                 .await();
 
         return new String(Base64.getEncoder().encode(result.imageData));
+    }
+
+    public String getUrl(String placeId) throws IOException, InterruptedException, ApiException {
+        return PlacesApi.placeDetails(context, placeId)
+                .fields(PlaceDetailsRequest.FieldMask.URL)
+                .await()
+                .url.toString();
     }
 
     /**

@@ -2,6 +2,7 @@ package com.translink.api.config;
 
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.maps.GeoApiContext;
+import com.translink.api.config.format.SpecializedTimeFormatter;
 import com.translink.api.config.format.SpecializedTimeSerializer;
 import com.translink.api.config.format.converter.SpecializedTimeReadConverter;
 import com.translink.api.config.format.converter.SpecializedTimeWriteConverter;
@@ -13,8 +14,10 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 @EnableAspectJAutoProxy
 @EnableAsync
-public class AppConfig {
+public class AppConfig implements WebMvcConfigurer {
     @Value("${service.google.maps.key}")
     private String apiKey;
 
@@ -35,6 +38,11 @@ public class AppConfig {
 
     @Value("${service.google.timeout}")
     private int maxTimeout;
+
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addFormatter(new SpecializedTimeFormatter());
+    }
 
     @Bean
     public MongoCustomConversions mongoCustomConversions() {
