@@ -46,6 +46,8 @@ public class QuartzInitializer {
             Scheduler scheduler = factory.getScheduler();
             scheduler.scheduleJob(job, trigger);
             scheduler.start();
+
+            log.info("Scheduler is started.");
         }
     }
 }
