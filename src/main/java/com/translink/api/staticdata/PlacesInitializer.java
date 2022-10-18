@@ -81,7 +81,7 @@ public class PlacesInitializer {
         List<String> stopIds = (List<String>) stopMap.get("stops");
         stopIds.parallelStream()
                 .forEach(stopId -> {
-                    Stop stop = stopRepository.findByStopId(stopId);
+                    Stop stop = stopRepository.findById(stopId).get();
 
                     try {
                         List<Landmark> list = placesService.findNearbyPlaces(new LatLng(stop.getLatitude(), stop.getLongitude()))
@@ -90,7 +90,7 @@ public class PlacesInitializer {
                                         .map(result -> {
                                             try {
                                                 Landmark landmark = Landmark.builder()
-                                                        .stopId(stop.getStopId())
+                                                        .stopId(stop.getId())
                                                         .latitude(result.geometry.location.lat)
                                                         .longitude(result.geometry.location.lng)
                                                         .name(result.name)
@@ -116,7 +116,7 @@ public class PlacesInitializer {
                                 .collect(Collectors.toList());
 
                         landmarkRepository.saveAll(list);
-                        log.info("Populated stop {} with {} landmarks", stop.getStopId(), list.size());
+                        log.info("Populated stop {} with {} landmarks", stop.getId(), list.size());
 
                         if(stop.getChildStops() != null && !stop.getChildStops().isEmpty()) {
                             stop.getChildStops().parallelStream()
@@ -124,7 +124,7 @@ public class PlacesInitializer {
                                         List<Landmark> childLandmarks = list.parallelStream()
                                                 .map(Landmark::copy)
                                                 .map(landmark -> {
-                                                    landmark.setStopId(childStop.getStopId());
+                                                    landmark.setStopId(childStop.getId());
 
                                                     return landmark;
                                                 })
@@ -132,7 +132,7 @@ public class PlacesInitializer {
 
                                         landmarkRepository.saveAll(childLandmarks);
 
-                                        log.info("Populated stop {} with {} landmarks", childStop.getStopId(), childLandmarks.size());
+                                        log.info("Populated stop {} with {} landmarks", childStop.getId(), childLandmarks.size());
                                     });
                         }
                     } catch (Exception e) {

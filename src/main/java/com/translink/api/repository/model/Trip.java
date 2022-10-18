@@ -8,7 +8,6 @@ import com.translink.api.config.format.DepthSerializable;
 import com.translink.api.repository.model.embed.Calendar;
 import com.translink.api.repository.model.embed.CalendarException;
 import com.translink.api.repository.model.embed.Direction;
-import com.translink.api.repository.model.embed.Shape;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -16,7 +15,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -29,10 +27,6 @@ public class Trip implements DepthSerializable {
     @Id
     private String id;
 
-    @Indexed
-    @NotBlank
-    private String tripId;
-
     @NotBlank
     private String serviceId;
 
@@ -40,6 +34,7 @@ public class Trip implements DepthSerializable {
     private String shapeId;
 
     @DocumentReference
+    @Indexed
     @ToString.Exclude
     @JsonIgnore
     private Route route;
@@ -53,15 +48,18 @@ public class Trip implements DepthSerializable {
     private String blockId;
 
     @DocumentReference(lazy = true)
+    @Indexed
     @ToString.Exclude
     @JsonIgnore
     private List<StopTime> stopTimes;
 
-    @NotEmpty
+    @DocumentReference(lazy = true)
     @ToString.Exclude
+    @JsonIgnore
     private List<Shape> shapes;
 
     @NotNull
+    @Indexed
     @ToString.Exclude
     private Calendar calendar;
 
@@ -75,6 +73,15 @@ public class Trip implements DepthSerializable {
 
         ObjectNode routeNode = route.toJson(depth-1, mapper, originalClass);
         node.set("route", routeNode);
+
+        if(Trip.class.equals(originalClass)) {
+            ArrayNode shapeNode = mapper.createArrayNode();
+            shapes.stream()
+                    .map(shape -> shape.toJson(depth-1, mapper, originalClass))
+                    .forEach(shapeNode::add);
+
+            node.set("shapes", shapeNode);
+        }
 
         if(depth > 1) {
             ArrayNode stopTimesNode = mapper.createArrayNode();

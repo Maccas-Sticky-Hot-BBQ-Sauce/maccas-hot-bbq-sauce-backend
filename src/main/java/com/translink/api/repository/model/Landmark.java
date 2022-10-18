@@ -39,6 +39,10 @@ public class Landmark {
     private double rating;
 
     private String icon;
+// TODO:
+//    private String url;
+//
+//    private String description;
 
     public Landmark copy() {
         return Landmark.builder()

@@ -9,9 +9,12 @@ import com.translink.api.repository.model.embed.StopDropOffType;
 import com.translink.api.repository.model.embed.StopPickupType;
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.ReadOnlyProperty;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 
@@ -25,17 +28,29 @@ public class StopTime implements DepthSerializable {
     private String id;
 
     @NotNull
+    @Indexed
     private SpecializedTime arrival;
 
     @NotNull
+    @Indexed
     private SpecializedTime departure;
 
-    @DocumentReference
+    @Indexed
+    @NotBlank
+    private String stopId;
+
+    @DocumentReference(lookup = "{ '_id': ?#{#self.stopId} }")
+    @ReadOnlyProperty
     @ToString.Exclude
     @JsonIgnore
     private Stop stop;
 
-    @DocumentReference
+    @Indexed
+    @NotBlank
+    private String tripId;
+
+    @DocumentReference(lookup = "{ '_id': ?#{#self.tripId} }")
+    @ReadOnlyProperty
     @ToString.Exclude
     @JsonIgnore
     private Trip trip;

@@ -25,10 +25,6 @@ public class Stop implements DepthSerializable {
     @Id
     private String id;
 
-    @Indexed
-    @NotBlank
-    private String stopId;
-
     private String stopCode;
 
     @NotBlank
@@ -51,15 +47,18 @@ public class Stop implements DepthSerializable {
     private int locationType;
 
     @DocumentReference(lazy = true)
+    @Indexed
     @ToString.Exclude
     @JsonIgnore
     private List<StopTime> stopTimes;
 
     @DocumentReference(lazy = true)
+    @Indexed
     @JsonIgnore
     private Stop parentStop;
 
     @DocumentReference
+    @Indexed
     @JsonIgnore
     @ToString.Exclude
     private List<Stop> childStops;
