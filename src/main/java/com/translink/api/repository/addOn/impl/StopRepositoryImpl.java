@@ -2,10 +2,8 @@ package com.translink.api.repository.addOn.impl;
 
 import com.translink.api.config.format.model.SpecializedTime;
 import com.translink.api.repository.StopTimeRepository;
-import com.translink.api.repository.TripRepository;
 import com.translink.api.repository.addOn.StopRepositoryCustom;
 import com.translink.api.repository.model.Stop;
-import com.translink.api.repository.model.StopTime;
 import com.translink.api.repository.model.embed.Days;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -13,7 +11,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
