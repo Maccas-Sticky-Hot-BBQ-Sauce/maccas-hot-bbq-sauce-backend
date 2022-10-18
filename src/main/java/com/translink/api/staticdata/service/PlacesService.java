@@ -2,6 +2,7 @@ package com.translink.api.staticdata.service;
 
 import com.google.maps.GeoApiContext;
 import com.google.maps.ImageResult;
+import com.google.maps.PlaceDetailsRequest;
 import com.google.maps.PlacesApi;
 import com.google.maps.errors.ApiException;
 import com.google.maps.model.LatLng;
@@ -60,6 +61,13 @@ public class PlacesService {
                 .await();
 
         return new String(Base64.getEncoder().encode(result.imageData));
+    }
+
+    public String getUrl(String placeId) throws IOException, InterruptedException, ApiException {
+        return PlacesApi.placeDetails(context, placeId)
+                .fields(PlaceDetailsRequest.FieldMask.URL)
+                .await()
+                .url.toString();
     }
 
     /**

@@ -86,7 +86,8 @@ public class PlacesInitializer {
                     try {
                         List<Landmark> list = placesService.findNearbyPlaces(new LatLng(stop.getLatitude(), stop.getLongitude()))
                                 .parallelStream()
-                                .flatMap(response -> Arrays.stream(response.results).parallel()
+                                .flatMap(response -> Arrays.stream(response.results)
+                                        .parallel()
                                         .map(result -> {
                                             try {
                                                 Landmark landmark = Landmark.builder()
@@ -96,6 +97,8 @@ public class PlacesInitializer {
                                                         .name(result.name)
                                                         .image(result.photos != null && result.photos.length > 0 ? placesService.getPhoto(result.photos[0].photoReference, result.photos[0].height, result.photos[0].width) : null)
                                                         .icon(String.valueOf(result.icon))
+                                                        .url(placesService.getUrl(result.placeId))
+                                                        .description(null)
                                                         .rating(result.rating)
                                                         .build();
 

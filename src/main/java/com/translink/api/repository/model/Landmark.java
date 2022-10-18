@@ -39,10 +39,10 @@ public class Landmark {
     private double rating;
 
     private String icon;
-// TODO:
-//    private String url;
-//
-//    private String description;
+
+    private String url;
+
+    private String description;
 
     public Landmark copy() {
         return Landmark.builder()
@@ -55,6 +55,8 @@ public class Landmark {
                 .distance(this.distance)
                 .rating(this.rating)
                 .icon(this.icon)
+                .url(this.url)
+                .description(this.description)
                 .build();
     }
 }
