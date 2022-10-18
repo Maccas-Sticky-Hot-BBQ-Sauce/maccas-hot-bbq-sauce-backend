@@ -2,10 +2,8 @@ package com.translink.api.repository.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.translink.api.config.format.DepthSerializable;
-import com.translink.api.repository.model.Trip;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

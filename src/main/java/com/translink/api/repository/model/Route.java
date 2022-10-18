@@ -9,7 +9,6 @@ import com.translink.api.repository.model.embed.RouteType;
 import lombok.*;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
