@@ -59,7 +59,6 @@ public class Trip implements DepthSerializable {
     private List<Shape> shapes;
 
     @NotNull
-    @Indexed
     @ToString.Exclude
     private Calendar calendar;
 

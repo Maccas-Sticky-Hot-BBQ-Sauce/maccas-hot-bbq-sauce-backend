@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.translink.api.config.format.DepthSerializable;
 import com.translink.api.config.format.model.SpecializedTime;
+import com.translink.api.repository.model.embed.Days;
 import com.translink.api.repository.model.embed.StopDropOffType;
 import com.translink.api.repository.model.embed.StopPickupType;
 import lombok.*;
@@ -15,8 +16,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
+import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
@@ -26,6 +30,10 @@ import javax.validation.constraints.PositiveOrZero;
 public class StopTime implements DepthSerializable {
     @Id
     private String id;
+
+    @Indexed
+    @NotEmpty
+    private Set<Days> days;
 
     @NotNull
     @Indexed

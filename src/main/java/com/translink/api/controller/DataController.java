@@ -34,16 +34,16 @@ public class DataController {
 
     @GetMapping("/stop")
     public Stop getStopDetail(String id) {
-        return stopRepository.findByStopId(id);
+        return stopRepository.findById(id).get();
     }
 
     @GetMapping("/trip")
     public Trip getTripDetail(String id) {
-        return tripRepository.findByTripId(id);
+        return tripRepository.findById(id).get();
     }
 
     @GetMapping("/route")
     public Route getRouteDetail(String id) {
-        return routeRepository.findByRouteId(id);
+        return routeRepository.findById(id).get();
     }
 }

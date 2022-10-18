@@ -1,12 +1,11 @@
 package com.translink.api.repository;
 
-import com.translink.api.repository.addOn.StopRepositoryCustom;
 import com.translink.api.repository.model.Stop;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface StopRepository extends MongoRepository<Stop, String>, StopRepositoryCustom {
+public interface StopRepository extends MongoRepository<Stop, String> {
 //    @Aggregation(pipeline = {
 //            "{$match: {\"stopId\": ?0}}",
 //            "{$lookup: {from: \"stopTime\", localField: \"stopTimes\", foreignField: \"_id\", as: \"stopTimes\"}}",

@@ -260,6 +260,7 @@ public class StaticDataInitializer {
 
                     Trip trip = tripMap.get(csvRecord.get(0));
                     stopTime.setTripId(trip.getId());
+                    stopTime.setDays(trip.getCalendar().getDays());
                     trip.getStopTimes().add(stopTime);
 
                     Stop stop = stopMap.get(csvRecord.get(3));
