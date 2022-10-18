@@ -46,7 +46,7 @@ public class StopTime implements DepthSerializable {
     @NotBlank
     private String stopId;
 
-    @DocumentReference(lookup = "{ '_id': ?#{#self.stopId} }")
+    @DocumentReference(lazy = true, lookup = "{ '_id': ?#{#self.stopId} }")
     @ReadOnlyProperty
     @ToString.Exclude
     @JsonIgnore
@@ -56,7 +56,7 @@ public class StopTime implements DepthSerializable {
     @NotBlank
     private String tripId;
 
-    @DocumentReference(lookup = "{ '_id': ?#{#self.tripId} }")
+    @DocumentReference(lazy = true, lookup = "{ '_id': ?#{#self.tripId} }")
     @ReadOnlyProperty
     @ToString.Exclude
     @JsonIgnore
