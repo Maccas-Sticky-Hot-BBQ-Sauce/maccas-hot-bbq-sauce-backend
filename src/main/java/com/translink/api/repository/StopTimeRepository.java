@@ -13,4 +13,6 @@ import java.util.Set;
 
 @Repository
 public interface StopTimeRepository extends MongoRepository<StopTime, String> {
+    boolean existsByTripId(String tripId);
+    StopTime findByTripIdAndStopId(String tripId, String stopId);
 }
