@@ -1,14 +1,18 @@
 package com.translink.api.controller;
 
+import com.translink.api.config.format.model.SpecializedTime;
 import com.translink.api.repository.RouteRepository;
 import com.translink.api.repository.StopRepository;
 import com.translink.api.repository.TripRepository;
 import com.translink.api.repository.model.Route;
 import com.translink.api.repository.model.Stop;
 import com.translink.api.repository.model.Trip;
+import com.translink.api.repository.model.embed.Days;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -45,5 +49,10 @@ public class DataController {
     @GetMapping("/route")
     public Route getRouteDetail(String id) {
         return routeRepository.findById(id).get();
+    }
+
+    @GetMapping("/stop/filter")
+    public Stop getFilterDetail(@RequestParam String id, @RequestParam Days day, @RequestParam SpecializedTime fromTime, @RequestParam SpecializedTime toTime) {
+        return stopRepository.findStopByStopIdFilterByDayAndTime(id, day, fromTime, toTime).getUniqueMappedResult();
     }
 }
