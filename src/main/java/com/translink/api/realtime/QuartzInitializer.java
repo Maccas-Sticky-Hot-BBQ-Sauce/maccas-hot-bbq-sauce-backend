@@ -47,7 +47,7 @@ public class QuartzInitializer {
             scheduler.scheduleJob(job, trigger);
             scheduler.start();
 
-            log.info("Scheduler is started.");
+            log.info("Scheduler is started, next fire time: {}", trigger.getNextFireTime());
         }
     }
 }
