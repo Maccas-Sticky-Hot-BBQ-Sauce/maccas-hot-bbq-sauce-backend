@@ -50,4 +50,26 @@ public class SampleController {
 //        return RouteDTO.mapFrom(routeRepository.findByRouteId(id));
         return routeRepository.findByRouteId(id);
     }
+
+    /*
+    @GetMapping("/stopTest")
+    public List<StopTime> getStopDetailTest(String id) {
+//        return StopDTO.mapFrom(stopRepository.findByStopId(id));
+        return StopTimeRepository.findByStopId(id);
+    }
+    */
+
+    
+    /*
+    @GetMapping("/stopPeriod")
+    public Stop getStopPeriodDetail(String id, Integer tp) {
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        SpecializedTime startTime = SpecializedTime.parse("00:00:00", timeFormatter);
+        SpecializedTime endTime = SpecializedTime.parse("05:59:59", timeFormatter);
+        for (int i = 0; i < stopRepository.findByStopId(id).getStopTimes().size(); i++) {
+            stopRepository.findByStopId(id).getStopTimes().get(0).getDeparture();
+        }
+        return stopRepository.findByStopId(id);
+    }
+    */
 }

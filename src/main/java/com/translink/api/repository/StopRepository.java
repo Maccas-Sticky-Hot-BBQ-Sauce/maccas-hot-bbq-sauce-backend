@@ -7,4 +7,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface StopRepository extends MongoRepository<Stop, String> {
     Stop findByStopId(String stopId);
+
+    //@Query("{ 'stopId' : ?0 , 'stopTimes.id' : '633be4df0db4ba4e0f94bb36' }")
+    //Stop findByStopIDPeriod(String stopId);
 }
