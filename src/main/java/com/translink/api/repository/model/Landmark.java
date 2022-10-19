@@ -46,7 +46,6 @@ public class Landmark {
 
     public Landmark copy() {
         return Landmark.builder()
-                .id(this.id)
                 .stopId(this.stopId)
                 .latitude(this.latitude)
                 .longitude(this.longitude)
