@@ -26,6 +26,8 @@ To run the application:
 ./gradlew clean assemble
 ```
 
+2. Copy the `./resources` file into the JAR folder.
+
 2. Run the jar.
 ```
 java -Dlog4j2.contextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector -jar ./build/libs/api-0.0.1-SNAPSHOT.jar
@@ -35,3 +37,7 @@ You can specify this list of program arguments to modify the runtime:
 - `--refresh-data.static=true` to rebuild the static database from scratch.
 - `--refresh-data.places=true` to rebuild the landmark database from scratch.
 - `--batch-size` to specify the batch size on rebuilding the database.
+- `--execute-scheduler=true` to run the job scheduler.
+- `--service.gtfs.scheduler.interval=5` to set the job interval (in minutes).
+
+You can see more of this by modifying `application.properties`.
