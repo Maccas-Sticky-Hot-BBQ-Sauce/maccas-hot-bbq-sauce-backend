@@ -37,7 +37,7 @@ public class StopRepositoryImpl implements StopRepositoryCustom {
                         .filter(stopTime -> {
                             String time = stopTime.getDeparture().toString();
 
-                            return time.compareTo(fromTime.toString()) >= 0 && time.compareTo(toTime.toString()) < 0;
+                            return time.compareTo(fromTime.toString()) >= 0 && time.compareTo(toTime.toString()) <= 0;
                         })
                         .filter(stopTime -> stopTime.getTrip().getCalendar().getDays().contains(days))
                         .collect(Collectors.toList())

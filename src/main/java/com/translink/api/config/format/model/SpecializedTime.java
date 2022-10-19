@@ -1,5 +1,7 @@
 package com.translink.api.config.format.model;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.text.ParsePosition;
 import java.time.Duration;
 import java.time.format.DateTimeFormatter;
@@ -8,7 +10,7 @@ import java.time.temporal.ChronoField;
 import java.time.temporal.TemporalAccessor;
 
 // Source: https://stackoverflow.com/a/65484682/14148807
-public class SpecializedTime {
+public class SpecializedTime implements Comparable<SpecializedTime> {
     private final Duration timeSince0000;
 
     private SpecializedTime(Duration timeSince0000) {
@@ -51,5 +53,26 @@ public class SpecializedTime {
         int secs = (int) (seconds % 60);
 
         return String.format("%02d:%02d:%02d", hours, minutes, secs);
+    }
+
+    @Override
+    public int compareTo(@NotNull SpecializedTime o) {
+        return this.timeSince0000.compareTo(o.timeSince0000);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof SpecializedTime) {
+            SpecializedTime time = (SpecializedTime) obj;
+
+            return this.timeSince0000.equals(time.timeSince0000);
+        }
+
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.timeSince0000.hashCode();
     }
 }
