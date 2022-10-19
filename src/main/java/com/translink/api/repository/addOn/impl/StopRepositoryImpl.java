@@ -1,7 +1,6 @@
 package com.translink.api.repository.addOn.impl;
 
 import com.translink.api.config.format.model.SpecializedTime;
-import com.translink.api.repository.StopTimeRepository;
 import com.translink.api.repository.addOn.StopRepositoryCustom;
 import com.translink.api.repository.model.Stop;
 import com.translink.api.repository.model.embed.Days;
