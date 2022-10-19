@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <Console name="LogToConsole" target="SYSTEM_OUT">
+            <Filters>
+                <LevelRangeFilter minLevel="FATAL" maxLevel="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <PatternLayout pattern="%style{%d{ISO8601}}{black} %highlight{%-5level }[%style{%t}{bright,blue}] %style{%c{1.}}{bright,yellow}: %msg%n%throwable" disableAnsi="false"/>
+        </Console>
+
+        <RollingFile name="LogToFile" fileName="./logs/${date:MM-yyyy}/info.log"
+                     filePattern="./logs/${date:MM-yyyy}/info-%d{MM-yyyy}-%i.log.gz">
+            <Filters>
+                <LevelRangeFilter minLevel="WARN" maxLevel="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <PatternLayout pattern="%style{%d{ISO8601}}{black} %highlight{%-5level }[%style{%t}{bright,blue}] %style{%c{1.}}{bright,yellow}: %msg%n"/>
+
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="25MB"/>
+            </Policies>
+        </RollingFile>
+
+        <RollingFile name="LogGenericErrorsToFile" fileName="./logs/${date:MM-yyyy}/errors/error.log"
+                     filePattern="./logs/${date:MM-yyyy}/errors/error-%d{MM-yyyy}-%i.log.gz">
+            <Filters>
+                <LevelRangeFilter minLevel="FATAL" maxLevel="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <PatternLayout pattern="%style{%d{ISO8601}}{black} %highlight{%-5level }[%style{%t}{bright,blue}] %style{%c{1.}}{bright,yellow}: %msg%n%throwable"/>
+
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="25MB"/>
+            </Policies>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Logger name="org.springframework" additivity="false">
+            <AppenderRef ref="LogToConsole"/>
+            <AppenderRef ref="LogGenericErrorsToFile"/>
+            <AppenderRef ref="LogToFile"/>
+        </Logger>
+        <Root level="all">
+            <AppenderRef ref="LogToConsole"/>
+            <AppenderRef ref="LogGenericErrorsToFile"/>
+            <AppenderRef ref="LogToFile"/>
+        </Root>
+    </Loggers>
+</Configuration>

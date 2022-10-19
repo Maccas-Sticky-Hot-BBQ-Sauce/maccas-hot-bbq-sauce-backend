@@ -1,7 +1,6 @@
 package com.translink.api.repository.addOn.impl;
 
 import com.translink.api.config.format.model.SpecializedTime;
-import com.translink.api.repository.StopTimeRepository;
 import com.translink.api.repository.addOn.StopRepositoryCustom;
 import com.translink.api.repository.model.Stop;
 import com.translink.api.repository.model.embed.Days;
@@ -15,8 +14,6 @@ import java.util.stream.Collectors;
 
 @Component
 public class StopRepositoryImpl implements StopRepositoryCustom {
-    private StopTimeRepository stopTimeRepository;
-
     private MongoTemplate template;
 
     @Autowired
@@ -24,16 +21,11 @@ public class StopRepositoryImpl implements StopRepositoryCustom {
         this.template = template;
     }
 
-    @Autowired
-    public void setStopTimeRepository(StopTimeRepository stopTimeRepository) {
-        this.stopTimeRepository = stopTimeRepository;
-    }
-
     @Override
     public Stop findStopByStopIdFilterByDayAndTime(String stopId, Days days, SpecializedTime fromTime, SpecializedTime toTime) {
         Stop stop = template.findOne(new Query(Criteria.where("id").is(stopId)), Stop.class);
         stop.setStopTimes(
-                stop.getStopTimes().stream()
+                stop.getStopTimes().parallelStream()
                         .filter(stopTime -> {
                             String time = stopTime.getDeparture().toString();
 
