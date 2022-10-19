@@ -23,10 +23,12 @@ public class RealtimeController {
     }
 
     @GetMapping("/trip-update")
-    public List<TripUpdate> getTripUpdates(@RequestParam List<String> ids) {
+    public List<TripUpdate> getTripUpdates(@RequestParam List<String> id) {
         List<TripUpdate> updates = new ArrayList<>();
-        for(StopTime stopTime : stopTimeRepository.findAllById(ids)) {
-            updates.add(stopTime.getUpdate());
+        for(StopTime stopTime : stopTimeRepository.findAllById(id)) {
+            if(stopTime.getUpdate() != null) {
+                updates.add(stopTime.getUpdate());
+            }
         }
 
         return updates;
