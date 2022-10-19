@@ -1,8 +1,7 @@
 package com.translink.api.realtime;
 
-import com.google.gson.Gson;
 import com.translink.api.config.format.model.SpecializedTime;
-import com.translink.api.realtime.service.proto.GtfsRealtime;
+import com.translink.api.realtime.proto.GtfsRealtime;
 import com.translink.api.repository.BulkBatchProcessor;
 import com.translink.api.repository.StopTimeRepository;
 import com.translink.api.repository.model.StopTime;
@@ -13,15 +12,12 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.Files;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
